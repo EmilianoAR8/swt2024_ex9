@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+
+on:
+  push: 
+    branches: 
+      - main #Trigger workflow on push to the main branch 
+
+jobs: 
+  build: 
+    runs-on: ubuntu-latest 
+        #Use Ubuntu enviroment for the job 
+
+    steps: 
+      - name: Checkout code 
+        uses: actions/setup-java@v3
+        with: 
+          distribution: 'temurin'
+                # Use the Temurin distribution of Java 
+          java-version: '11' 
+                # Set Java vesion to 11 
+
+      - name: Build with Maven 
+        run: mvn -B package --file pom.xml 
+          # Build the project using Maven 
+
+      - name: Run test 
+        run: mvn test  # Run unit test using Maven 
+
+  deploy:
+    needs: build # Run deploy job only if the build job succeds 
+    runs-on: ubuntu-latest 
+
+    steps: 
+    - name: Deploy to Staging 
+      run: echo "Deploying to staging enviroment..." 
+        # Placeholder for actual deployment 
